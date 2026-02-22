@@ -1,0 +1,164 @@
+---
+title: "Progress Report: SBA Loan Insights Dashboard"
+author: "Esha Teware"
+date: "November 23, 2025"
+format: 
+  html:
+    embed-resources: true
+---
+
+## 3.1 Admin
+
+**App Title:** SBA Loan Insights Dashboard\
+**Course:** DATA 613 - Introduction to Data Science (Section 004)\
+**Semester:** Fall 2025\
+**Team Member:** Esha Teware (Individual Project)
+
+## 3.2 Topic and Data Updates
+
+### Context and Use Case
+
+The project continues to focus on analyzing **U.S. Small Business Administration (SBA)** loans to understand how federal credit support for small businesses has evolved since 2020.\
+The dashboard enables users such as policy analysts and researchers to explore key questions like:
+
+-   How have loan volumes, sizes, and defaults varied across U.S. states and industries?\
+-   Which factors are most associated with loan default risk?\
+-   Have lending patterns shifted since the COVID-19 period?
+
+The scope remains the same as proposed earlier, but the **user workflow and visualization design have matured**, focusing on interactive exploration by region, business profile, and loan outcomes.
+
+### Data Source Status
+
+-   **Primary Dataset:** FOIA – SBA 7(a) Loan Data (FY 2020–Present) from [data.sba.gov](https://data.sba.gov)\
+-   **Volume:** ≈ 330 k observations, 43 variables\
+-   **Processing:** Completed through a standalone `data_cleaning.R` script following tidyverse conventions.\
+    Steps included: cleaning column names, converting date formats, creating a `year` field, and deriving a binary `default` variable.\
+-   **New Derived Fields:** simplified categorical variables (`business_age`, `collateral_ind`) and a `default` flag for charge-offs.\
+-   **Dynamic Filtering:** The dataset now supports filtering by year, state, industry, and business type directly in the Shiny app.
+
+**Next enhancement (Phase 2):** integrate Census ACS state-level data (median income or unemployment rate) to examine lending equity and access.
+
+## 3.3 Ethical Review (Update)
+
+The project follows ethical data-use standards in line with the **ACM Code of Ethics**:
+
+-   All borrower identifiers (names, addresses) have been excluded.\
+-   Analysis and visualization are performed only at aggregate levels (state or industry).\
+-   Disparities are contextualized to avoid misinterpretation of systemic inequalities.\
+-   All scripts and data preparation steps are documented for transparency and reproducibility.
+
+An **About & Ethics** tab has been added to the dashboard, summarizing these principles of privacy, fairness, and transparency.
+
+## 3.4 App Design Updates
+
+### Layout and Tabs
+
+The dashboard currently includes **five main tabs**:
+
+| Tab | Purpose |
+|:---|:---|
+| **Overview** | Interactive U.S. map showing total loans, average loan size, or total approval amount by state, with KPI boxes and a download option. |
+| **Regional Trends** | Bar and line plots of loan volumes by state and year; includes filters for region and time period. |
+| **Business Insights** | Loan totals and distributions by business age, type, and top 10 industries (NAICS). |
+| **Loan Outcomes** | Displays loan status distribution and a logistic model predicting default probability. |
+| **About & Ethics** | Provides data source details, ethics statement, and project acknowledgments. |
+
+### User Data Selection
+
+Enhanced sidebar filters allow users to select:
+
+\- Year range (2020–2025)\
+- State(s) or region(s)\
+- Industry (NAICS)\
+- Business age and type\
+- Metric (Total Loans, Average Loan Size, or Total Approval Amount)
+
+A **Download Filtered Data** button lets users export customized data views as CSV.
+
+### Exploratory Analysis
+
+EDA functionality now includes:
+
+\- U.S. choropleth map with hover tool tips and dynamic color scaling\
+- Top 10 states by loan volume (bar chart)\
+- Loan volume over time (line chart)\
+- Boxplots by business or industry\
+- KPI tiles summarizing total, average, and aggregate loan values
+
+### Statistical Modeling
+
+The app implements a **logistic regression** model to predict loan default:
+
+```{r, eval=FALSE}
+glm(default ~ gross_approval + termin_months + business_age + collateral_ind + delivery_method + borr_state, family = "binomial")
+```
+
+## 3.5 Demonstration Outline and Responsibilities
+
+Since this is an individual project, all development and presentation responsibilities are completed by me, **Esha Teware**.
+
+**Planned Demonstration Outline (≈ 10 minutes total):**
+
+| Segment | Duration | Content |
+|:---|:--:|:---|
+| **1. Introduction** | 1 min | Overview of the SBA 7(a) program and the motivation for analyzing post-COVID lending patterns. |
+| **2. Exploratory Analysis (EDA)** | 3 min | Walk through the *Overview* and *Regional Trends* tabs, highlighting filters, KPI boxes, and state-level comparisons. |
+| **3. Business Insights** | 2 min | Demonstrate loan patterns by business type, age, and industry using interactive filters. |
+| **4. Loan Outcomes & Modeling** | 3 min | Present the logistic regression model, interpret coefficients, and preview diagnostic visuals (ROC curve, odds ratios). |
+| **5. Conclusion & Future Work** | 1 min | Summarize key findings, highlight ethical considerations, and outline next steps (Equity tab, pre/post-COVID analysis). |
+
+All results and visualizations will be demonstrated live in the Shiny app, no external slides will be used.
+
+## 3.6 Risk Assessment and Mitigation
+
+| **Risk** | **Likelihood** | **Impact** | **Mitigation Strategy** |
+|:---|:--:|:--:|:---|
+| Large dataset (\~330 k rows) may slow app performance | Medium | Medium | Use `.rds` files for faster load; summarize data before plotting. |
+| Limited time for pre/post-COVID extensions | High | Medium | Prioritize finishing the main app and model before adding extensions. |
+| Missing values or NAICS mismatches | Medium | Low | Apply `drop_na()` and restrict analyses to top industries. |
+| Merging Census data may cause join issues | Medium | Low | Prototype joins with mock state-level data before full integration. |
+| Layout inconsistencies across devices | Low | Low | Use `{bslib}` Flatly theme and test on both local and AU Lab systems. |
+| Version-control errors or file overwrites | Low | Low | Maintain separate Git branches (`data-clean`, `eda`, `model`, `app`) and commit frequently. |
+
+## 3.7 Collaboration and Schedule Updates
+
+Although this is an **individual project**, I follow collaborative best practices using **GitHub version control** and modular branching.
+
+### Workflow Summary
+
+-   **Scripts:**\
+    `data_cleaning.R` → preprocessing\
+    `helpers.R` → utility functions\
+    `app.R` → UI and server logic\
+
+### Updated Milestones
+
+| **Phase** | **Deliverable** | **Status / Target Date** |
+|:---|:---|:---|
+| Data Cleaning & Preparation | Completed | Oct 31 |
+| Exploratory Data Analysis | Completed | Nov 8 |
+| UI and Layout Design | Completed | Nov 12 |
+| Statistical Model Integration | In Progress | Nov 26 |
+| Equity & COVID Extension (Optional) | Planned | Dec 2 |
+| Final Vignette + App Refinement | Pending | Dec 4 |
+| Demonstration Rehearsal | Pending | Dec 6 |
+| Final Submission & Presentation | Pending | Dec 9 |
+
+A code-freeze is planned one week before submission to allow time for testing, polishing, and rehearsal.
+
+## 3.8 Readability and Documentation
+
+All work adheres to **DATA 613 readability and reproducibility standards:**
+
+-   **Coding style:** tidyverse conventions, formatted using `{air}` and `{styler}`.\
+-   **Organization:** structured folders (`data_raw`, `data`, `R_scripts`, `vignette`).\
+-   **Documentation:** each script includes clear section headers and explanatory comments.\
+-   **Clarity:** figures and tables in the app are labeled with descriptive titles and captions.\
+-   **Reproducibility:** dependencies are listed in the vignette (`tidyverse`, `plotly`, `usmap`, `bslib`, `DT`, `lubridate`).\
+-   **Grammar & Consistency:** reviewed for a clear, concise academic tone and consistent formatting.
+
+### **Overall Summary**
+
+The **SBA Loan Insights Dashboard** is on track and functionally complete.\
+It now provides a clean, reproducible interface to explore national lending patterns, supported by ethical design and a predictive model.\
+Next steps include adding **equity indicators** and **pre/post-COVID comparisons** to deepen analytical insights and policy relevance for the final submission.

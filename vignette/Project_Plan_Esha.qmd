@@ -1,0 +1,170 @@
+---
+title: "SBA 7(a) Loan Insights Dashboard"
+author: "Esha Teware"
+format: html
+editor: visual
+embed-resources: true
+---
+
+## 1. Admin
+
+**App Title:** SBA 7(a) Loan Insights Dashboard\
+**Course:** DATA 613 – Introduction to Data Science 004\
+**Semester:** Fall 2025\
+**Team Members:** Esha Teware
+
+------------------------------------------------------------------------
+
+## 2. Topic and Data
+
+### 2.1 Context of the Problem
+
+Small businesses drive innovation and employment but often struggle to secure affordable credit. The U.S. Small Business Administration (SBA) bridges this gap through its 7(a) loan program, providing government - guaranteed loans that reduce lender risk.\
+This project uses the **FOIA SBA 7(a) Loan Dataset (FY 2020–Present)** to analyze national lending trends since the COVID-19 pandemic. The Shiny dashboard aims to visualize how SBA support has evolved over time and whether access to capital is distributed equitably across **states, industries, and demographics**.
+
+The central question:\
+\> *How have SBA 7(a) lending patterns, loan sizes, and outcomes varied across U.S. regions and borrower groups since 2020, and what factors are associated with loan default risk?*
+
+The dashboard will help **policy analysts, researchers, and small-business advocates** explore lending equity, identify patterns in approval amounts, and evaluate indicators of loan performance.
+
+------------------------------------------------------------------------
+
+### 2.2 Literature Review
+
+Research on SBA programs emphasizes their critical role in improving credit access but also notes persistent disparities.
+
+1.  **Galli-Debicella (2020)** found SBA loans significantly increased small-firm survival rates (74% vs. 44%) but that loan size was not linked to success. This study focused on Connecticut firms in 1999.\
+2.  **Lee et al. (2023)** examined regional redistribution effects of SBA-guaranteed loans and identified uneven lending across states and industries, shaped by banking capacity and local SBA offices.\
+3.  **Craig, Rutherford, & Milliken (2019)** documented strong local employment growth in counties with higher SBA lending, reinforcing the program’s economic impact.
+
+Building on this work, my project **extends** these studies to a modern, post-COVID context by analyzing the national FOIA dataset and exploring demographic and regional patterns using interactive visualization.
+
+------------------------------------------------------------------------
+
+### 2.3 Proposed Data Source
+
+**Dataset:** FOIA – 7(a) (FY 2020–Present)\
+**Link:** [data.sba.gov](https://data.sba.gov/en/dataset/7-a-504-foia/resource/d67d3ccb-2002-4134-a288-481b51cd3479)\
+**Format:** CSV (\~153 MB)\
+**Scope:** All SBA-guaranteed 7(a) loans approved nationwide since FY 2020 - 2024.
+
+### Key Variables Used
+
+| **Category** | **Variables** | **Purpose** |
+|----|----|----|
+| Borrower location | `BorrState`, `BorrCity` | Regional trends, mapping |
+| Loan characteristics | `GrossApproval`, `TermInMonths`, `DeliveryMethod`, `CollateralInd` | Loan structure and size |
+| Borrower characteristics | `BusinessType`, `BusinessAge`, `JobsSupported` | Business profile |
+| Loan outcome | `LoanStatus`, `ChargeoffDate`, `GrossChargeoffAmount` | Default and repayment status |
+| Time & program info | `AsOfDate`, `Program` | Time trends, program filtering |
+
+**Data volume:** 330,705 observations, 43 variables.\
+**Cleaning steps:** standardize column names, convert date and numeric formats, drop sensitive identifiers (`BorrName`, `BorrStreet`).
+
+------------------------------------------------------------------------
+
+## 3. Use Case
+
+### 3.1 Actor and Description
+
+The primary **actor** is a **policy or economic development analyst** interested in evaluating how SBA lending supports small businesses nationwide.\
+Secondary users include SBA staff, journalists, and students analyzing post-COVID small-business finance.
+
+### 3.2 Actor Questions of Interest
+
+1.  Which states and industries received the largest share of SBA loans since 2020?\
+2.  How did lending change during the COVID-19 recovery years?\
+3.  Do average loan sizes differ across borrower gender or race?\
+4.  What factors are associated with loan charge-offs (defaults)?
+
+### 3.3 Anticipated Workflow
+
+1.  User selects filters for state, year range, industry, or demographics.\
+2.  Dashboard dynamically updates visualizations.\
+3.  User views model results showing which loan attributes predict default risk.\
+4.  Insights are used for equity analysis and policy recommendations.
+
+------------------------------------------------------------------------
+
+## 4. Ethical Review
+
+Although the FOIA dataset is public, it includes sensitive demographic data (`Gender`, `Race`). Ethical handling requires: - Aggregating and visualizing data at group or regional levels (no individual disclosure).\
+- Avoiding misinterpretation of disparities by contextualizing results within systemic credit access issues.\
+- Ensuring transparency of analysis steps and acknowledgment of data limitations (missing demographics, reporting bias).
+
+The project aligns with the **ACM Code of Ethics** and promotes fairness, transparency, and responsible use of public financial data.
+
+------------------------------------------------------------------------
+
+## 5. App Concept
+
+### 5.1 General Layout
+
+The Shiny dashboard will include:
+
+1\. **Overview Tab:** summary statistics and KPIs.\
+2. **Regional Trends Tab:** choropleth map and bar charts of loan volumes by state.\
+3. **Demographic Insights Tab:** comparisons of loan size and counts by gender and race.\
+4. **Loan Outcomes Tab:** distribution of loan statuses and logistic model results.\
+5. **About & Ethics Tab:** data source, limitations, and ethical statement.
+
+### 5.2 User Data Selection
+
+Interactive sidebar filters for: - Year range (2020–2025)\
+- State\
+- Industry (NAICS 2-digit)\
+- Business age (startup vs. existing)\
+- Gender and race
+
+### 5.3 Exploratory Analysis
+
+-   Summary statistics for loan count, total amount, and average approval.\
+-   Bar and line charts for industry and time trends.\
+-   Interactive map visualizing regional totals and averages.
+
+### 5.4 Statistical Model
+
+To explore factors affecting loan default:
+
+```{r,eval=FALSE}
+# Logistic regression predicting loan default 
+glm(Default ~ GrossApproval + TermInMonths + BusinessAge + CollateralInd + DeliveryMethod + BorrState, family = "binomial")
+```
+
+## 6. Collaboration
+
+### 6.1 Roles and Responsibilities
+
+This is an **individual project** completed solely by *Esha Teware*.\
+I am responsible for all aspects of the project, including: - Data cleaning and preparation of the FOIA 7(a) Loan dataset\
+- Exploratory data analysis and visualization design\
+- Statistical modeling and interpretation\
+- Development of the Shiny dashboard user interface\
+- Documentation, ethics statement, and final report formatting
+
+### 6.2 Workflow and Branching
+
+Although working independently, I will follow a structured workflow similar to a collaborative environment:
+
+1\. Maintain a GitHub repository with branches for `data-clean`, `eda`, `model`, and `app`.\
+2. Commit changes frequently with clear messages.\
+3. Merge tested code into the `main` branch after checkpoints.\
+4. Track milestones and code updates through Git version control.
+
+### 6.3 Schedule and Milestones
+
+| Phase  | Deliverable                             | Target Date |
+|--------|-----------------------------------------|-------------|
+| Week 2 | Data cleaning & initial EDA             | Oct 31      |
+| Week 4 | Visualization and layout draft          | Nov 10      |
+| Week 6 | Shiny app prototype ready               | Nov 20      |
+| Week 7 | Logistic model integration & testing    | Nov 26      |
+| Week 8 | Final vignette (.qmd + HTML) submission | Dec 4       |
+
+------------------------------------------------------------------------
+
+## 7. Readability
+
+The final document will use clear Quarto formatting with embedded R code and reproducible outputs.\
+All figures will include descriptive titles, captions, and legends.\
+Spelling, grammar, and APA-style citations will be reviewed before submission to ensure professional presentation and compliance with course readability standards.
